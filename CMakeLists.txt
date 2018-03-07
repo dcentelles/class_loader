@@ -31,6 +31,10 @@ SET(PROJECT_NAME_GIT "${PROJECT_NAME_ORIG}_${_build_version}")
 string(TOUPPER ${PROJECT_NAME_ORIG} TMP0)
 SET(${TMP0}_GIT "${PROJECT_NAME_GIT}" PARENT_SCOPE)
 
+if (TARGET ${PROJECT_NAME_ORIG})
+    message(WARNING "${PROJECT_NAME_ORIG} without git suffix has been built!")
+endif()
+
 if (TARGET ${PROJECT_NAME_GIT})
     message(WARNING "${PROJECT_NAME_GIT} has already been built!")
     return()
