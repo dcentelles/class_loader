@@ -40,37 +40,20 @@ project (${PROJECT_NAME_GIT} CXX)
 message(STATUS "PROJECT NAME: ${PROJECT_NAME}")
 
 find_package(Boost REQUIRED COMPONENTS thread system)
-
-set(CATKIN_DISABLED true CACHE BOOL "Disable the catkin build, useful if catkin is present but a build outside of ros is done")
-if(NOT CATKIN_DISABLED)
-  find_package(catkin QUIET)
-endif()
-
 find_package(console_bridge REQUIRED)
 
-if(${catkin_FOUND})
-  find_package(catkin REQUIRED COMPONENTS cmake_modules)
-  find_package(Poco REQUIRED COMPONENTS Foundation)
-  catkin_package(
-    INCLUDE_DIRS include
-    LIBRARIES ${PROJECT_NAME} ${Poco_LIBRARIES}
-    DEPENDS Boost Poco console_bridge
-    CFG_EXTRAS class_loader-extras.cmake
-  )
-else()
-  SET(BUILDTYPE ${CMAKE_BUILD_TYPE})
-  SET(CMAKE_BUILD_TYPE "Release")
-  set(Poco_DIR cmake)
-  find_package(Poco REQUIRED COMPONENTS Foundation)
-  SET(CMAKE_BUILD_TYPE ${BUILDTYPE})
-  set(CATKIN_GLOBAL_BIN_DESTINATION bin)
-  set(CATKIN_GLOBAL_LIB_DESTINATION lib)
-  set(CATKIN_GLOBAL_LIBEXEC_DESTINATION lib)
-  set(CATKIN_GLOBAL_INCLUDE_DESTINATION include)
-  set(CATKIN_PACKAGE_LIB_DESTINATION ${CATKIN_GLOBAL_LIB_DESTINATION})
-  set(CATKIN_PACKAGE_BIN_DESTINATION ${CATKIN_GLOBAL_LIBEXEC_DESTINATION}/${PROJECT_NAME})
-  set(CATKIN_PACKAGE_INCLUDE_DESTINATION ${CATKIN_GLOBAL_INCLUDE_DESTINATION}/${PROJECT_NAME})
-endif()
+SET(BUILDTYPE ${CMAKE_BUILD_TYPE})
+SET(CMAKE_BUILD_TYPE "Release")
+set(Poco_DIR cmake)
+find_package(Poco REQUIRED COMPONENTS Foundation)
+SET(CMAKE_BUILD_TYPE ${BUILDTYPE})
+set(CATKIN_GLOBAL_BIN_DESTINATION bin)
+set(CATKIN_GLOBAL_LIB_DESTINATION lib)
+set(CATKIN_GLOBAL_LIBEXEC_DESTINATION lib)
+set(CATKIN_GLOBAL_INCLUDE_DESTINATION include)
+set(CATKIN_PACKAGE_LIB_DESTINATION ${CATKIN_GLOBAL_LIB_DESTINATION})
+set(CATKIN_PACKAGE_BIN_DESTINATION ${CATKIN_GLOBAL_LIBEXEC_DESTINATION}/${PROJECT_NAME})
+set(CATKIN_PACKAGE_INCLUDE_DESTINATION ${CATKIN_GLOBAL_INCLUDE_DESTINATION}/${PROJECT_NAME})
 
 include_directories(include ${console_bridge_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS} ${Poco_INCLUDE_DIRS})
 
@@ -103,24 +86,18 @@ install(DIRECTORY include/class_loader/
 install(PROGRAMS scripts/class_loader_headers_update.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
 
-if(CATKIN_ENABLE_TESTING)
-  add_subdirectory(test)
-endif()
-
-if(NOT catkin_FOUND)
-  set(TARGET_NAME ${PROJECT_NAME})
-  set(PKGCONFIG_LIBS
-    ${Boost_LIBRARIES}
-    ${console_bridge_LIBRARIES}
-    ${Poco_LIBRARIES}
-  )
-  message(STATUS "POCO LIBS: ${Poco_LIBRARIES}")
-  SET(${PROJECT_NAME}_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/include/ PARENT_SCOPE)
-  SET(${PROJECT_NAME}_LIBRARIES ${PROJECT_NAME} PARENT_SCOPE)
-  # Prepare and install necessary files to support finding of the library
-  # using pkg-config
-  #configure_file(${CMAKE_CURRENT_SOURCE_DIR}/src/${TARGET_NAME}.pc.in
-  #  ${CMAKE_CURRENT_BINARY_DIR}/${TARGET_NAME}.pc @ONLY)
-  #
+set(TARGET_NAME ${PROJECT_NAME})
+set(PKGCONFIG_LIBS
+${Boost_LIBRARIES}
+${console_bridge_LIBRARIES}
+${Poco_LIBRARIES}
+)
+message(STATUS "POCO LIBS: ${Poco_LIBRARIES}")
+SET(${PROJECT_NAME}_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/include/ PARENT_SCOPE)
+SET(${PROJECT_NAME}_LIBRARIES ${PROJECT_NAME} PARENT_SCOPE)
+# Prepare and install necessary files to support finding of the library
+# using pkg-config
+#configure_file(${CMAKE_CURRENT_SOURCE_DIR}/src/${TARGET_NAME}.pc.in
+#  ${CMAKE_CURRENT_BINARY_DIR}/${TARGET_NAME}.pc @ONLY)
+#
   #install(FILES ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.pc DESTINATION lib/pkgconfig)
-endif()
