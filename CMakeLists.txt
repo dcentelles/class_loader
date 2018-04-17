@@ -97,8 +97,8 @@ ${console_bridge_LIBRARIES}
 ${Poco_LIBRARIES}
 )
 message(STATUS "POCO LIBS: ${Poco_LIBRARIES}")
-SET(${PROJECT_NAME}_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/include/ PARENT_SCOPE)
-SET(${PROJECT_NAME}_LIBRARIES ${PROJECT_NAME} PARENT_SCOPE)
+SET(${PROJECT_NAME}_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/include/ CACHE STRING "${PROJECT_NAME} include dirs")
+SET(${PROJECT_NAME}_LIBRARIES ${PROJECT_NAME} CACHE STRING "${PROJECT_NAME} libraries")
 # Prepare and install necessary files to support finding of the library
 # using pkg-config
 #configure_file(${CMAKE_CURRENT_SOURCE_DIR}/src/${TARGET_NAME}.pc.in
